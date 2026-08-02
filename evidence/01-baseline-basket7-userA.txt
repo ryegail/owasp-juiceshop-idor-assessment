@@ -1,0 +1,54 @@
+Baseline request - Test User A retrieving their own basket
+============================================================
+
+Context: Test User A is authenticated and requests their own basket
+(basket ID 7) through the normal application flow. Captured via Burp
+Suite Proxy. This establishes the expected, authorized behavior.
+
+Request
+-------
+GET /rest/basket/7 HTTP/1.1
+Host: 127.0.0.1:3000
+Authorization: Bearer [REDACTED - Test User A session token]
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+Response
+--------
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "status": "success",
+  "data": {
+    "id": 7,
+    "coupon": null,
+    "UserId": 7,
+    "createdAt": "2026-08-01T19:56:15.683Z",
+    "updatedAt": "2026-08-01T19:56:15.683Z",
+    "Products": [
+      {
+        "id": 25,
+        "name": "Fruit Press",
+        "description": "Fruits go in. Juice comes out. Pomace you can send back to us for recycling purposes.",
+        "price": 89.99,
+        "deluxePrice": 89.99,
+        "image": "fruit_press.jpg",
+        "BasketItem": {
+          "ProductId": 25,
+          "BasketId": 7,
+          "id": 10,
+          "quantity": 1
+        }
+      }
+    ]
+  }
+}
+
+Observation
+-----------
+Basket ID 7 belongs to UserId 7 (Test User A). Requesting it while
+authenticated as Test User A returns the expected data. This is the
+authorized baseline that the exploit request (03-idor-exploit.txt)
+is compared against.
